@@ -1,14 +1,14 @@
-
 public class KNN {
 
+	Data data;
+	
 	public KNN(Data trainingSet) {
-		// TODO Auto-generated constructor stub
+		data = trainingSet;
 	}
 	
 	Double predict(Example e, int k) {
-		Double d = new Double(0);
-		
-		return d;
+		Double prediction = data.avgClosest(e, k);
+		return prediction;
 	}
 
 }

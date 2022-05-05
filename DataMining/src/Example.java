@@ -31,7 +31,7 @@ class Example {
 		double distance = 0;
 		
 		for	(int i = 0; i < this.example.length; i++) {
-			if(this.get(i) != e.get(i)) {
+			if(!(e.get(i).equals(this.get(i)))) {
 				distance++;
 			}
 		}

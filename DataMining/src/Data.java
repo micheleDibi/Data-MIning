@@ -2,8 +2,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
-
-
 class Data {
 	
 	Example[] data;
@@ -12,7 +10,7 @@ class Data {
 	Attribute[] explanatorySet;
 	ContinuousAttribute classAttribute;
 	
-	Data(String fileName)throws FileNotFoundException{
+	Data(String fileName) throws FileNotFoundException{
 		
 		  File inFile = new File (fileName);
 
@@ -29,9 +27,10 @@ class Data {
 	      line = sc.nextLine();
 	      
 	      while(!line.contains("@data")){
+	    	  
 	    	  s=line.split(" ");
-	    	  if(s[0].equals("@desc"))
-	    	  { 	// aggiungo l'attributo allo spazio descrittivo
+	    	  
+	    	  if(s[0].equals("@desc")) { 	// aggiungo l'attributo allo spazio descrittivo
 		    		//@desc motor discrete 
 		    		  explanatorySet[iAttribute] = new DiscreteAttribute(s[1],iAttribute);
 		      }
@@ -44,7 +43,7 @@ class Data {
 	      }
 		      
 		  //avvalorare numero di esempi
-	       numberOfExamples=new Integer(line.split(" ")[1]);
+	      numberOfExamples = new Integer(line.split(" ")[1]);
 	      
 	      //popolare data e target
 	      data=new Example[numberOfExamples];
@@ -158,6 +157,28 @@ class Data {
 			
 			
 		}
+		
+	}
+	
+	double avgClosest(Example e, int k) {
+		double[] key = new double[data.length];
+		int count = 0;
+		double somma = 0;
+		
+		for(int i = 0; i < data.length; i++) {
+			key[i] = data[i].distance(e);
+		}
+		
+		quicksort(key, 0, key.length - 1);
+		
+		for(int i = 0; i < target.length; i++) {
+			if(key[i] < k) {
+				somma = somma + target[i];
+				count++;
+			}
+		}
+		
+		return somma / count;
 		
 	}
 	
