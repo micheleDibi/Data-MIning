@@ -4,7 +4,7 @@ class MainTest {
 
 	public static void main(String[] args) throws FileNotFoundException{
 		//Data trainingSet= new Data("servo.dat");
-		Data trainingSet = new Data("/home/michele/eclipse-workspace/DataMining/src/simple.dat");
+		Data trainingSet = new Data("./src/simple.dat");
 		System.out.println(trainingSet);
 		
 		KNN knn = new KNN(trainingSet);
