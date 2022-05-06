@@ -1,4 +1,7 @@
 import java.io.FileNotFoundException;
+import data.*;
+import mining.*;
+
 
 class MainTest {
 
@@ -16,7 +19,7 @@ class MainTest {
 		System.out.println("Prediction with K=2:" + knn.predict(e, 2));
 		System.out.println("Prediction with K=3:" + knn.predict(e, 3));
 		System.out.println("Prediction with K=4:" + knn.predict(e, 4));
-		
+
 	}
 	
 }
