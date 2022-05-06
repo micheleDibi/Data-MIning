@@ -55,7 +55,7 @@ public class Data {
 	      short iRow=0;
 	      while (sc.hasNextLine())
 	      {
-	    	  Example e = new Example(explanatorySet.length);
+	    	  Example e = new Example(getNumberofExplanatoryAttributes());
 	    	  line = sc.nextLine();
 	    	  								// assumo che attributi siano tutti discreti
 	    	  s = line.split(","); 			//E,E,5,4, 0.28125095
@@ -71,7 +71,9 @@ public class Data {
 		    sc.close();
 	} // fine costruttore	
 	
-	//implementare int getNumberofExplanatoryAttributes()
+	int getNumberofExplanatoryAttributes() {
+		return explanatorySet.length;
+	}
 	
 	/*
 	 * Partiziona data rispetto all'elemento x di key e restiutisce il punto di separazione
