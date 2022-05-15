@@ -19,6 +19,10 @@ public class Example {
 	//scambia i valori contenuti nel campo example dell'oggetto corrente 
 	//con i valori contenuti nel campo example del parametro e
 	void swap(Example e) {
+		
+		if (this.example.length != e.example.length)
+			throw new ExampleSizeException("Dimensione dei due esempi passati differenti");
+		
 		for (int i = 0; i < this.example.length; i++) {
 			Object supp = e.get(i);		//oggetto di supporto per lo scambio
 			e.set(this.get(i), i);
@@ -29,6 +33,10 @@ public class Example {
 	//calcola e restituisce la distanza di Hamming calcolata tra l’istanza di Example passata
 	//come parametro e quella corrente
 	double distance(Example e) {
+		
+		if (this.example.length != e.example.length)
+			throw new ExampleSizeException("Dimensione dei due esempi passati differenti");
+		
 		double distance = 0;
 		
 		for	(int i = 0; i < this.example.length; i++) {
