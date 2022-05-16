@@ -28,7 +28,7 @@ public class Data {
 	      if(s.length > 2) {
 	    	  throw new TrainingDataException("Numero di parametri di @schema non valido");
 	      } else if(s.length == 1) {  // s[0] = "@schema"; s[1] = "4";
-	    	  	throw new TrainingDataException("Valore dello @schema non dichiatato");
+	    	  	throw new TrainingDataException("Valore dello @schema non dichiarato");
 	      } else {
 	    	  boolean isNum = s[1].matches("[0-9]+");  //utilizzo di una espressione regolare TODO controllare se accetta valori decimali
 	    	  
@@ -70,7 +70,7 @@ public class Data {
 	      }
 	      
 	      if(line.split(" ").length > 2) {
-	    	  throw new TrainingDataException("Sinstatti parametro @data non corretta");
+	    	  throw new TrainingDataException("Sintassi parametro @data non corretta");
 	    	  
 	      } else if ((line.split(" ").length != 2) ){
 	    	  throw new TrainingDataException("Valore parametro @data non specificato");
