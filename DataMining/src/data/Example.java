@@ -11,7 +11,7 @@ public class Example {
 		example[index] = o;
 	}
 	
-	Object get(int index) {
+	public Object get(int index) {
 		return example[index];
 	}
 	

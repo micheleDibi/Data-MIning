@@ -45,7 +45,7 @@ public class MainTest {
 				System.out.println(exc.getMessage());		
 			}
 			
-			/*
+			
 			
 			e = new Example(3);
 			e.set("A",0);
@@ -60,7 +60,6 @@ public class MainTest {
 
 			// read example withKeyboard
 			System.out.println("Prediction:" + knn.predict());
-			*/
 		}
 		catch(TrainingDataException exc){
 			System.out.println(exc.getMessage());		
