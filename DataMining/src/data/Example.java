@@ -21,7 +21,7 @@ public class Example {
 	void swap(Example e) {
 		
 		if (this.example.length != e.example.length)
-			throw new ExampleSizeException("Dimensione dei due esempi passati differenti");
+			throw new ExampleSizeException("Dimensione dei due esempi passati differente");
 		
 		for (int i = 0; i < this.example.length; i++) {
 			Object supp = e.get(i);		//oggetto di supporto per lo scambio
@@ -35,7 +35,7 @@ public class Example {
 	double distance(Example e) {
 		
 		if (this.example.length != e.example.length)
-			throw new ExampleSizeException("Dimensione dei due esempi passati differenti");
+			throw new ExampleSizeException("Dimensione dei due esempi passati differente");
 		
 		double distance = 0;
 		
