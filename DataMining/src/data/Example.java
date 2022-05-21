@@ -1,29 +1,55 @@
 package data;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+
 public class Example {
 	
-	private Object[] example;
+	private ArrayList<Object> example;
 
 	public Example(int size) {
-		example = new Object[size];
+		example = new ArrayList<Object>(size);
 	}
 	
 	public void set(Object o, int index) {
-		example[index] = o;
+		
+		if(index < example.size()) {
+			example.set(index, o);
+		} else {
+			example.add(index, o);
+		}
 	}
 	
 	public Object get(int index) {
-		return example[index];
+		return example.get(index);
+	}
+	
+	public String toString() {
+		Iterator<Object> it = example.iterator();
+		String s = new String("\n");
+		int index = 0;
+		
+		while(it.hasNext()) {
+			s = s + "oggetto: " + it.next().toString() + "\n";
+			index++;
+		}
+		
+		return s;
+		
 	}
 	
 	
 	//scambia i valori contenuti nel campo example dell'oggetto corrente 
 	//con i valori contenuti nel campo example del parametro e
-	void swap(Example e) {
+	public void swap(Example e) {
 		
-		if (this.example.length != e.example.length)
-			throw new ExampleSizeException("Dimensione dei due esempi passati differente");
+		if (this.example.size() != e.example.size())
+			throw new ExampleSizeException("Dimensione dei due esempi passati differenti");
 		
-		for (int i = 0; i < this.example.length; i++) {
+		//Iterator<Object> it = example.iterator();
+
+		
+		for (int i = 0; i < this.example.size(); i++) {
 			Object supp = e.get(i);		//oggetto di supporto per lo scambio
 			e.set(this.get(i), i);
 			this.set(supp, i);
@@ -34,12 +60,12 @@ public class Example {
 	//come parametro e quella corrente
 	double distance(Example e) {
 		
-		if (this.example.length != e.example.length)
-			throw new ExampleSizeException("Dimensione dei due esempi passati differente");
+		if (this.example.size() != e.example.size())
+			throw new ExampleSizeException("Dimensione dei due esempi passati differenti");
 		
 		double distance = 0;
 		
-		for	(int i = 0; i < this.example.length; i++) {
+		for	(int i = 0; i < this.example.size(); i++) {
 			if(!(e.get(i).equals(this.get(i)))) {
 				distance++;
 			}

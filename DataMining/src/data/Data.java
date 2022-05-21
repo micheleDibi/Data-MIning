@@ -1,14 +1,18 @@
 package data;
+
 import java.io.File;
 import java.io.FileNotFoundException;
+
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Scanner;
 
 public class Data {
 	
-	private Example[] data;
-	private Double[] target;
+	private ArrayList<Example> data;
+	private ArrayList<Double> target;
 	private int numberOfExamples;
-	private Attribute[] explanatorySet;
+	private ArrayList<Attribute> explanatorySet;
 	private ContinuousAttribute classAttribute;
 
 	public Data(String fileName) throws TrainingDataException, FileNotFoundException {
@@ -28,7 +32,7 @@ public class Data {
 	      if(s.length > 2) {
 	    	  throw new TrainingDataException("Numero di parametri di @schema non valido");
 	      } else if(s.length == 1) {  // s[0] = "@schema"; s[1] = "4";
-	    	  	throw new TrainingDataException("Valore dello @schema non dichiarato");
+	    	  	throw new TrainingDataException("Valore dello @schema non dichiatato");
 	      } else {
 	    	  boolean isNum = s[1].matches("[0-9]+");  //utilizzo di una espressione regolare TODO controllare se accetta valori decimali
 	    	  
@@ -38,7 +42,7 @@ public class Data {
 	      
 		  //popolare explanatory Set 
 	  		
-		  explanatorySet = new Attribute[new Integer(s[1])];
+		  explanatorySet = new ArrayList<Attribute>(new Integer(s[1]));
 		  short iAttribute = 0;
 	      line = sc.nextLine().trim();
 	      
@@ -48,9 +52,9 @@ public class Data {
 	    	  
 	    	  if(s[0].equals("@desc")) {
 	    		  
-	    		  if(s.length == 2) {
-	    			  explanatorySet[iAttribute] = new DiscreteAttribute(s[1],iAttribute);
-	    		  } else throw new TrainingDataException("Parametro @desc mancante");
+	    		  if(s.length == 2) {	    			  
+	    			  explanatorySet.add(iAttribute, new DiscreteAttribute(s[1],iAttribute));
+	    		  } else throw new TrainingDataException("Parametri @desc mancante");
   
 		      }
 	    	  else if(s[0].equals("@target")) {
@@ -70,7 +74,7 @@ public class Data {
 	      }
 	      
 	      if(line.split(" ").length > 2) {
-	    	  throw new TrainingDataException("Sintassi parametro @data non corretta");
+	    	  throw new TrainingDataException("Sinstatti parametro @data non corretta");
 	    	  
 	      } else if ((line.split(" ").length != 2) ){
 	    	  throw new TrainingDataException("Valore parametro @data non specificato");
@@ -86,8 +90,8 @@ public class Data {
 	      numberOfExamples=new Integer(line.split(" ")[1]);
 	       	      
 	      //popolare data e target
-	      data = new Example[numberOfExamples];
-	      target = new Double[numberOfExamples];
+	      data = new ArrayList<Example>(numberOfExamples);
+	      target = new ArrayList<Double>(numberOfExamples);
 	      	      	      
 	      short iRow=0;
 	      
@@ -96,13 +100,13 @@ public class Data {
 	    	  Example e = new Example(getNumberofExplanatoryAttributes());
 	    	  line = sc.nextLine().trim();
 	    	  								// assumo che attributi siano tutti discreti
-	    	  s = line.split(","); 			//E,E,5,4, 0.28125095
+	    	  s = line.split(","); 			// E,E,5,4, 0.28125095
 	    	  for(short jColumn=0;jColumn<s.length-1;jColumn++) {
 	    		  e.set(s[jColumn],jColumn);
 	    	  }
-	    		  
-	    	  data[iRow] = e;
-	    	  target[iRow] = new Double(s[s.length-1]);
+	    		 
+	    	  data.add(iRow, e);
+	    	  target.add(iRow, new Double(s[s.length-1]));
 	    	  iRow++;
 	      }
 	      	      
@@ -113,70 +117,69 @@ public class Data {
 	     
 	      
 		  sc.close();
+		  
+		  System.out.println("data: " + data.toString());
+		  System.out.println("target: " + target);
 	} // fine costruttore	
 	
 	int getNumberofExplanatoryAttributes() {
-		return explanatorySet.length;
+		return explanatorySet.size();
 	}
 	
 	/*
 	 * Partiziona data rispetto all'elemento x di key e restiutisce il punto di separazione
 	 */
-	private int partition(double key[], int inf, int sup){
-		int i,j;
-	
-		i=inf; 
-		j=sup; 
-		int	med=(inf+sup)/2;
+	private int partition(ArrayList<Double> key, int inf, int sup){
+		int i = inf,j = sup;
+		int	med=(inf + sup) / 2;
 		
-		Double x=key[med];
+		Double x = key.get(med);
 		
-		data[inf].swap(data[med]);
+		data.get(inf).swap(data.get(med));
 		
-		double temp=target[inf];
-		target[inf]=target[med];
-		target[med]=temp;
+		double temp = target.get(inf);
+		target.set(inf, target.get(med));
+		target.set(med, temp);
 		
-		temp=key[inf];
-		key[inf]=key[med];
-		key[med]=temp;
+		temp = key.get(inf);
+		key.set(inf, key.get(med));
+		key.set(med, temp);
 		
 		while (true) 
 		{
 			
-			while(i<=sup && key[i]<=x){ 
-				i++; 
-				
+			while(i <= sup &&  key.get(i) <= x){ 
+				i++; 	
 			}
 		
-			while(key[j]>x) {
+			while(key.get(j) > x) {
 				j--;
-			
 			}
 			
 			if(i<j) { 
-				data[i].swap(data[j]);
-				temp=target[i];
-				target[i]=target[j];
-				target[j]=temp;
+				data.get(i).swap(data.get(j));
 				
-				temp=key[i];
-				key[i]=key[j];
-				key[j]=temp;
+				temp = target.get(i);
+				target.set(i, target.get(j));
+				target.set(j, temp);
 				
+				temp = key.get(i);
+				key.set(i, key.get(j));
+				key.set(j, temp);
 				
 			}
 			else break;
 		}
-		data[inf].swap(data[j]);
 		
-		temp=target[inf];
-		target[inf]=target[j];
-		target[j]=temp;
+		data.get(inf).swap(data.get(j));
 		
-		temp=key[inf];
-		key[inf]=key[j];
-		key[j]=temp;
+		temp = target.get(inf);
+		target.set(inf, target.get(j));
+		target.set(j, temp);
+		
+		temp = key.get(inf);
+		key.set(inf, key.get(j));
+		key.set(j, temp);
 		
 		return j;
 
@@ -187,13 +190,13 @@ public class Data {
 	 * usando come relazione d'ordine totale "<=" definita su key
 	 * @param A
 	 */
-	private void quicksort(double key[], int inf, int sup){
+	private void quicksort(ArrayList<Double> key, int inf, int sup){
 		
 		if(sup>=inf){
 			
 			int pos;
 			
-			pos=partition(key, inf, sup);
+			pos = partition(key, inf, sup);
 					
 			if ((pos-inf) < (sup-pos+1)) {
 				quicksort(key, inf, pos-1); 
@@ -211,25 +214,41 @@ public class Data {
 	}
 	
 	public double avgClosest(Example e, int k) {
-		double[] key = new double[data.length];
-		int count = 0;
-		double somma = 0;
+		//ArrayList<double> key = new ArrayList<double>(data.size());
 		
-		for(int i = 0; i < data.length; i++) {
-			key[i] = data[i].distance(e);
+		int diff = 0;
+		double somma = 0;		
+		ArrayList<Double> key = new ArrayList<Double>(data.size());
+		
+		Iterator<Example> ex = data.iterator();
+		while(ex.hasNext()) {
+			key.add(ex.next().distance(e));
 		}
 		
-		quicksort(key, 0, key.length - 1);
+		quicksort(key, 0, key.size() - 1);
 		
-		for(int i = 0; i < target.length; i++) {
-			if(key[i] < k) {
-				somma = somma + target[i];
-				count++;
+		//System.out.println(key);
+		
+		Double min = key.get(0);
+		//System.out.println("valore min: " + min);
+		int i = 0;
+		for(i = 0; i < target.size() && diff < k; i++) {
+			//System.out.println("valore key in ciclata " + i + ": " + key.get(i));
+			if(key.get(i).equals(min)) {
+				//System.out.println("Ciclata: " + i + " sono nell'if");
+				somma = somma + target.get(i);
+			} else {
+				//System.out.println("Ciclata: " + i + " sono nell'else");
+				diff++;
+				min = key.get(i);
+				i--;
+				//System.out.println("nuovo valore min: " + min);
 			}
 		}
 		
-		return somma / count;
+		//System.out.println("somma: " + somma + ", contatore: " + i);
 		
+		return somma / (i);
 	}
 	
 	public static void main(String args[])throws FileNotFoundException{

@@ -26,7 +26,8 @@ public class MainTest {
 			} catch (ExampleSizeException exc) {
 				System.out.println(exc.getMessage());
 			}
-	
+			
+			
 			try { 
 				System.out.println("Prediction with K=2: " + knn.predict(e, 2));
 			} catch (ExampleSizeException exc) {
@@ -44,7 +45,6 @@ public class MainTest {
 			} catch (ExampleSizeException exc) {
 				System.out.println(exc.getMessage());		
 			}
-			
 			
 			
 			e = new Example(3);

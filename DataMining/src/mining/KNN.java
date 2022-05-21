@@ -21,8 +21,7 @@ public class KNN {
 	public Double predict() {
 		
 		//2, A, B, 2
-		
-		System.out.println("Indicare il numero di attributi da inserire: ");
+		System.out.println("Inserire il numero di attributi da inserire: ");
 		int numOfAttribute = Keyboard.readInt();
 		System.out.println("Numero di attributi inserito: " + numOfAttribute);
 		
@@ -34,7 +33,7 @@ public class KNN {
 			String inputUser =  Keyboard.readString().trim();
 			e.set(inputUser, i);
 			
-			System.out.println("Valori inseriti...");
+			System.out.println("valori inseriti...");
 			System.out.print("<");
 			for(int j = 0; j < numOfAttribute; j++) {
 				
@@ -44,17 +43,17 @@ public class KNN {
 				
 			}
 			System.out.print(">");
-			System.out.println("Fine stampa valori inseriti");
+			System.out.println("fine stampa valori inseriti.");
 		}
-		System.out.println("Fine inserimento attributi");
+		System.out.println("fine inserimento attributi.");
 		
 		System.out.println("Inserire il valore k: ");
 		int k = Keyboard.readInt();
-		System.out.println("Valore k inserito: " + k);
+		System.out.println("valore k inserito: " + k);
 		
 		System.out.println("Inizio calcolo della media...");
 		Double prediction = data.avgClosest(e, k);
-		System.out.println("Media calcolata, procedo con il return...");
+		System.out.println("media calcolata, procedo con il return...");
 		
 		return prediction;
 	}
