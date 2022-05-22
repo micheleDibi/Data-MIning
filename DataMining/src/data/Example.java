@@ -66,11 +66,22 @@ public class Example {
 		double distance = 0;
 		
 		for	(int i = 0; i < this.example.size(); i++) {
-			if(!(e.get(i).equals(this.get(i)))) {
-				distance++;
+			
+			if(e.get(i) instanceof String) {
+				System.out.println("Sono nello string");
+				if(!(e.get(i).equals(this.get(i)))) {
+					distance++;
+				}
+			} else if(e.get(i) instanceof Double) {
+				System.out.println("Sono nell double");
+				distance = distance + Math.abs((Double)this.get(i) - (Double)e.get(i));
 			}
+			
+			System.out.println("iterata: " + i + " distanza: " + distance);
+			
 		}
 	
+		//System.out.println(distance);
 		return distance;
 	}
 	

@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Scanner;
 
+import utility.Keyboard;
+
 public class Data {
 	
 	private ArrayList<Example> data;
@@ -52,8 +54,13 @@ public class Data {
 	    	  
 	    	  if(s[0].equals("@desc")) {
 	    		  
-	    		  if(s.length == 2) {	    			  
-	    			  explanatorySet.add(iAttribute, new DiscreteAttribute(s[1],iAttribute));
+	    		  if(s.length == 3) {
+	    			  if(s[2].equalsIgnoreCase("discrete")) {
+	    				  explanatorySet.add(iAttribute, new DiscreteAttribute(s[1],iAttribute));
+	    			  } else if (s[2].equalsIgnoreCase("continuous")) {
+	    				  explanatorySet.add(iAttribute, new ContinuousAttribute(s[1],iAttribute));
+	    			  }
+	    			  //explanatorySet.add(iAttribute, new DiscreteAttribute(s[1],iAttribute));
 	    		  } else throw new TrainingDataException("Parametri @desc mancante");
   
 		      }
@@ -99,14 +106,30 @@ public class Data {
 	      {	    	  
 	    	  Example e = new Example(getNumberofExplanatoryAttributes());
 	    	  line = sc.nextLine().trim();
-	    	  								// assumo che attributi siano tutti discreti
+	    	  							
 	    	  s = line.split(","); 			// E,E,5,4, 0.28125095
 	    	  for(short jColumn=0;jColumn<s.length-1;jColumn++) {
-	    		  e.set(s[jColumn],jColumn);
+	    		  
+	    		  if(s[jColumn].matches("[0-9]+[\\.]?[0-9]*")) {		//TODO controllare correttezza espressione regolare
+	    			  e.set(Double.parseDouble(s[jColumn]), jColumn);
+	    		  } else {
+	    			  e.set(s[jColumn],jColumn);
+	    		  }
 	    	  }
 	    		 
 	    	  data.add(iRow, e);
 	    	  target.add(iRow, new Double(s[s.length-1]));
+	    	  
+	    	  int k = 0;
+	    	  for (Attribute a : explanatorySet) {
+	    		  if(a instanceof ContinuousAttribute) {
+	    			  ((ContinuousAttribute) a).setMax((Double)e.get(k));
+	    			  ((ContinuousAttribute) a).setMin((Double)e.get(k));
+	    		  }
+	    		  
+	    		  k++;
+	    	  }
+	    	  
 	    	  iRow++;
 	      }
 	      	      
@@ -118,8 +141,9 @@ public class Data {
 	      
 		  sc.close();
 		  
-		  System.out.println("data: " + data.toString());
-		  System.out.println("target: " + target);
+		  //System.out.println("data: " + data);
+		  //System.out.println("target: " + target);
+		  //System.out.println("explanatorySet: " + explanatorySet);
 	} // fine costruttore	
 	
 	int getNumberofExplanatoryAttributes() {
@@ -213,17 +237,22 @@ public class Data {
 		
 	}
 	
-	public double avgClosest(Example e, int k) {
-		//ArrayList<double> key = new ArrayList<double>(data.size());
-		
+	public double avgClosest(Example e, int k) {		
 		int diff = 0;
 		double somma = 0;		
 		ArrayList<Double> key = new ArrayList<Double>(data.size());
 		
+		e = scaledExample(e);
+		
 		Iterator<Example> ex = data.iterator();
+		//System.out.println(data);
 		while(ex.hasNext()) {
-			key.add(ex.next().distance(e));
+			Example ecsample = ex.next();
+			System.out.println(ecsample);
+			key.add(scaledExample(ecsample).distance(e));
 		}
+		
+		System.out.println(key);
 		
 		quicksort(key, 0, key.size() - 1);
 		
@@ -250,6 +279,49 @@ public class Data {
 		
 		return somma / (i);
 	}
+	
+	public Example readExample() {
+		Example e = new Example(getNumberofExplanatoryAttributes());
+		int i = 0;
+		for(Attribute a : explanatorySet) {
+			if(a instanceof DiscreteAttribute) {
+				System.out.print("Inserisci valore discreto X["+i+"]:");
+				e.set(Keyboard.readString(),i);
+			}
+			else {
+				double x = 0.0;
+				do{
+					System.out.print("Inserisci valore continuo X["+i+"]:");
+					x = Keyboard.readDouble();
+				} while(new Double(x).equals(Double.NaN));
+				e.set(x,i);
+			}
+			i++;
+		}
+		return e;
+	}
+	
+	private Example scaledExample(Example e) {
+		int i = 0;
+		Example supp = new Example(getNumberofExplanatoryAttributes());
+		
+		for(Attribute a : explanatorySet) {
+			if(a instanceof ContinuousAttribute) {
+				//System.out.println(e.get(i));
+				//System.out.println("valore da scalare: " + e.get(i));
+				Double scaled = ((ContinuousAttribute) a).scale(Double.parseDouble(e.get(i).toString()));
+				//System.out.println(scaled);
+				supp.set(scaled, i);
+			} else if (a instanceof DiscreteAttribute) {
+				supp.set(e.get(i), i);
+			}
+			
+			i++;
+		}
+		
+		return supp;
+	}
+
 	
 	public static void main(String args[])throws FileNotFoundException{
 		//Data trainingSet = new Data("servo.dat");
