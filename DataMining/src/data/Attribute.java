@@ -1,5 +1,8 @@
 package data;
-abstract class Attribute {
+
+import java.io.Serializable;
+
+abstract class Attribute implements Serializable{
 
 	private final String name;
 	private int index;
@@ -18,7 +21,7 @@ abstract class Attribute {
 	}
 	
 	public String toString() {
-		return ("name: " + name + " index: " + index);
+		return "["+index+"]" + name;
 	}
 	
 }

@@ -1,9 +1,10 @@
 package data;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class Example {
+public class Example implements Serializable{
 	
 	private ArrayList<Object> example;
 
@@ -26,16 +27,13 @@ public class Example {
 	
 	public String toString() {
 		Iterator<Object> it = example.iterator();
-		String s = new String("\n");
-		int index = 0;
+		String s = new String();
 		
 		while(it.hasNext()) {
-			s = s + "oggetto: " + it.next().toString() + "\n";
-			index++;
+			s = s + "oggetto: " + it.next().toString() + " ";
 		}
 		
-		return s;
-		
+		return s;	
 	}
 	
 	
@@ -45,9 +43,6 @@ public class Example {
 		
 		if (this.example.size() != e.example.size())
 			throw new ExampleSizeException("Dimensione dei due esempi passati differenti");
-		
-		//Iterator<Object> it = example.iterator();
-
 		
 		for (int i = 0; i < this.example.size(); i++) {
 			Object supp = e.get(i);		//oggetto di supporto per lo scambio
@@ -68,20 +63,13 @@ public class Example {
 		for	(int i = 0; i < this.example.size(); i++) {
 			
 			if(e.get(i) instanceof String) {
-				System.out.println("Sono nello string");
 				if(!(e.get(i).equals(this.get(i)))) {
 					distance++;
 				}
 			} else if(e.get(i) instanceof Double) {
-				System.out.println("Sono nell double");
 				distance = distance + Math.abs((Double)this.get(i) - (Double)e.get(i));
 			}
-			
-			System.out.println("iterata: " + i + " distanza: " + distance);
-			
 		}
-	
-		//System.out.println(distance);
 		return distance;
 	}
 	

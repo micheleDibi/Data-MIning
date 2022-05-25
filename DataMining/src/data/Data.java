@@ -2,20 +2,30 @@ package data;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Scanner;
 
 import utility.Keyboard;
 
-public class Data {
+public class Data implements Serializable{
 	
 	private ArrayList<Example> data;
 	private ArrayList<Double> target;
 	private int numberOfExamples;
 	private ArrayList<Attribute> explanatorySet;
 	private ContinuousAttribute classAttribute;
+
+	public String toString() {
+		String s = new String();
+		
+		s = s + "data: " + data.toString() + "\n";
+		s = s + "target: " + target.toString() + "\n";
+		s = s + "numberOfExamples: " + numberOfExamples + "\n";
+		
+		return s;
+	}
 
 	public Data(String fileName) throws TrainingDataException, FileNotFoundException {
 		
@@ -43,7 +53,6 @@ public class Data {
 	      }
 	      
 		  //popolare explanatory Set 
-	  		
 		  explanatorySet = new ArrayList<Attribute>(new Integer(s[1]));
 		  short iAttribute = 0;
 	      line = sc.nextLine().trim();
@@ -60,7 +69,6 @@ public class Data {
 	    			  } else if (s[2].equalsIgnoreCase("continuous")) {
 	    				  explanatorySet.add(iAttribute, new ContinuousAttribute(s[1],iAttribute));
 	    			  }
-	    			  //explanatorySet.add(iAttribute, new DiscreteAttribute(s[1],iAttribute));
 	    		  } else throw new TrainingDataException("Parametri @desc mancante");
   
 		      }
@@ -107,10 +115,10 @@ public class Data {
 	    	  Example e = new Example(getNumberofExplanatoryAttributes());
 	    	  line = sc.nextLine().trim();
 	    	  							
-	    	  s = line.split(","); 			// E,E,5,4, 0.28125095
+	    	  s = line.split(",");
 	    	  for(short jColumn=0;jColumn<s.length-1;jColumn++) {
 	    		  
-	    		  if(s[jColumn].matches("[0-9]+[\\.]?[0-9]*")) {		//TODO controllare correttezza espressione regolare
+	    		  if(s[jColumn].matches("[0-9]+[\\.]?[0-9]*")) {
 	    			  e.set(Double.parseDouble(s[jColumn]), jColumn);
 	    		  } else {
 	    			  e.set(s[jColumn],jColumn);
@@ -138,12 +146,9 @@ public class Data {
 	    	  System.out.println("Sono stati presi i primi " + numberOfExamples + " esempi");
 	      }
 	     
+	      //System.out.println(classAttribute);
 	      
 		  sc.close();
-		  
-		  //System.out.println("data: " + data);
-		  //System.out.println("target: " + target);
-		  //System.out.println("explanatorySet: " + explanatorySet);
 	} // fine costruttore	
 	
 	int getNumberofExplanatoryAttributes() {
@@ -245,37 +250,24 @@ public class Data {
 		e = scaledExample(e);
 		
 		Iterator<Example> ex = data.iterator();
-		//System.out.println(data);
 		while(ex.hasNext()) {
 			Example ecsample = ex.next();
-			System.out.println(ecsample);
 			key.add(scaledExample(ecsample).distance(e));
 		}
 		
-		System.out.println(key);
-		
 		quicksort(key, 0, key.size() - 1);
 		
-		//System.out.println(key);
-		
 		Double min = key.get(0);
-		//System.out.println("valore min: " + min);
 		int i = 0;
 		for(i = 0; i < target.size() && diff < k; i++) {
-			//System.out.println("valore key in ciclata " + i + ": " + key.get(i));
 			if(key.get(i).equals(min)) {
-				//System.out.println("Ciclata: " + i + " sono nell'if");
 				somma = somma + target.get(i);
 			} else {
-				//System.out.println("Ciclata: " + i + " sono nell'else");
 				diff++;
 				min = key.get(i);
 				i--;
-				//System.out.println("nuovo valore min: " + min);
 			}
 		}
-		
-		//System.out.println("somma: " + somma + ", contatore: " + i);
 		
 		return somma / (i);
 	}
@@ -307,10 +299,7 @@ public class Data {
 		
 		for(Attribute a : explanatorySet) {
 			if(a instanceof ContinuousAttribute) {
-				//System.out.println(e.get(i));
-				//System.out.println("valore da scalare: " + e.get(i));
 				Double scaled = ((ContinuousAttribute) a).scale(Double.parseDouble(e.get(i).toString()));
-				//System.out.println(scaled);
 				supp.set(scaled, i);
 			} else if (a instanceof DiscreteAttribute) {
 				supp.set(e.get(i), i);
@@ -320,12 +309,6 @@ public class Data {
 		}
 		
 		return supp;
-	}
-
-	
-	public static void main(String args[])throws FileNotFoundException{
-		//Data trainingSet = new Data("servo.dat");
-		//System.out.println(trainingSet);	
 	}
 
 }

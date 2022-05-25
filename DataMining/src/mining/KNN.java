@@ -1,11 +1,17 @@
 package mining;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+
 import data.Data;
 import data.Example;
-
 import utility.Keyboard;
 
-public class KNN {
+public class KNN implements Serializable{
 	
 	Data data;
 
@@ -26,6 +32,23 @@ public class KNN {
 			k=Keyboard.readInt();
 		}while (k < 1);
 		return data.avgClosest(e, k);
+	}
+	
+	public void salva(String fileName) throws IOException  {
+		FileOutputStream outFile = new FileOutputStream(fileName);
+		ObjectOutputStream outObject = new ObjectOutputStream(outFile);
+		
+		outObject.writeObject(this);
+		outObject.close();
+	}
+	
+	public static KNN carica(String fileName) throws IOException, ClassNotFoundException {
+		FileInputStream inFile = new FileInputStream(fileName);
+		try (ObjectInputStream inObject = new ObjectInputStream(inFile)) {
+			KNN k = (KNN) inObject.readObject();
+			
+			return k;
+		}
 	}
 
 }
