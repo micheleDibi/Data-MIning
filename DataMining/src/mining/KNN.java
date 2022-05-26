@@ -8,11 +8,12 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 import data.Data;
-import data.Example;
+import example.Example;
 import utility.Keyboard;
 
 public class KNN implements Serializable{
 	
+	private static final long serialVersionUID = 1L;
 	Data data;
 
 	public KNN(Data trainingSet) {

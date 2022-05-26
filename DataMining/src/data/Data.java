@@ -7,10 +7,12 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Scanner;
 
+import example.Example;
 import utility.Keyboard;
 
 public class Data implements Serializable{
 	
+	private static final long serialVersionUID = 1L;
 	private ArrayList<Example> data;
 	private ArrayList<Double> target;
 	private int numberOfExamples;
