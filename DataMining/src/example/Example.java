@@ -6,7 +6,6 @@ import java.util.Iterator;
 
 public class Example implements Serializable{
 	
-	private static final long serialVersionUID = 1L;
 	private ArrayList<Object> example;
 
 	public Example(int size) {

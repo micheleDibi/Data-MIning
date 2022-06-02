@@ -3,16 +3,22 @@ package data;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.Serializable;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Scanner;
 
+import database.Column;
+import database.DbAccess;
+import database.InsufficientColumnNumberException;
+import database.TableData;
+import database.TableSchema;
+import database.QUERY_TYPE;
 import example.Example;
 import utility.Keyboard;
 
 public class Data implements Serializable{
 	
-	private static final long serialVersionUID = 1L;
 	private ArrayList<Example> data;
 	private ArrayList<Double> target;
 	private int numberOfExamples;
@@ -25,10 +31,13 @@ public class Data implements Serializable{
 		s = s + "data: " + data.toString() + "\n";
 		s = s + "target: " + target.toString() + "\n";
 		s = s + "numberOfExamples: " + numberOfExamples + "\n";
+		s = s + "explanatorySet: " + explanatorySet + "\n";
+		//s = s + "classAttribute: " + classAttribute + "\n";
 		
 		return s;
 	}
 
+	@SuppressWarnings("removal")
 	public Data(String fileName) throws TrainingDataException, FileNotFoundException {
 		
 		  File inFile = new File (fileName);
@@ -56,6 +65,7 @@ public class Data implements Serializable{
 	      
 		  //popolare explanatory Set 
 		  explanatorySet = new ArrayList<Attribute>(new Integer(s[1]));
+		  //System.out.println("dimensione explanatorySet: " + explanatorySet.size());
 		  short iAttribute = 0;
 	      line = sc.nextLine().trim();
 	      
@@ -147,12 +157,53 @@ public class Data implements Serializable{
 	    	  System.out.println("Numero di esempi maggiore di quanto dichiarato nel parametro @data");
 	    	  System.out.println("Sono stati presi i primi " + numberOfExamples + " esempi");
 	      }
-	     
-	      //System.out.println(classAttribute);
 	      
 		  sc.close();
 	} // fine costruttore	
 	
+	
+	//classAttribute ???
+	public Data(DbAccess db, String table) throws TrainingDataException, InsufficientColumnNumberException, SQLException{
+		
+		TableSchema tableSchema = new TableSchema(table, db);
+		TableData tableData = new TableData(db, tableSchema);
+		
+		explanatorySet = new ArrayList<Attribute>();
+		
+		Iterator<Column> itSchema = tableSchema.iterator();
+		int counter = 0;
+		while(itSchema.hasNext()) {
+			Column col = itSchema.next();
+			
+			if(!col.isNumber()) {
+				explanatorySet.add(counter, new DiscreteAttribute(col.getColumnName(), counter));
+			} else {
+				explanatorySet.add(counter, new ContinuousAttribute(col.getColumnName(), counter));
+				((ContinuousAttribute)explanatorySet.get(counter)).setMin(tableData.getAggregateColumnValue(col, QUERY_TYPE.MIN));
+				((ContinuousAttribute)explanatorySet.get(counter)).setMax(tableData.getAggregateColumnValue(col, QUERY_TYPE.MAX));
+			}
+			
+			//classAttribute ???
+			
+			counter++;
+		}
+		
+		numberOfExamples = new Integer(tableData.getExamples().size());
+		
+		data = new ArrayList<Example>(numberOfExamples);
+	    target = new ArrayList<Double>(numberOfExamples);
+	    
+	    Iterator<Example> itData = tableData.getExamples().iterator();
+	    Iterator<?> itTarget = tableData.getTargetValues().iterator();
+	    int i = 0;
+	    while(itData.hasNext()) {
+	    	data.add(i, itData.next());
+	    	target.add(i, (Double) itTarget.next());
+	    	i++;
+	    }
+	   
+	}
+
 	int getNumberofExplanatoryAttributes() {
 		return explanatorySet.size();
 	}
