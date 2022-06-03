@@ -37,7 +37,7 @@ public class MainTest {
 							System.out.println("Nome file contenente un training set valido:");
 							file = Keyboard.readString();
 							trainingSet = new Data(file);
-							System.out.println(trainingSet);
+							//System.out.println(trainingSet);
 							flag = true;
 						} 
 						catch(TrainingDataException exc) {
@@ -90,7 +90,7 @@ public class MainTest {
 							table = Keyboard.readString();
 							
 							trainingSet = new Data(db,table);
-							System.out.println(trainingSet);
+							//System.out.println(trainingSet);
 							
 							flag = true;
 						}

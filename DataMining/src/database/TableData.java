@@ -78,7 +78,7 @@ public class TableData {
 		Double value = new Double(0);
 		String query = "select " + aggregate + "(" + column.getColumnName() + ")" + " from " + table;
 		
-		System.out.println(query);
+		//System.out.println(query);
 		
 		Statement statement = db.getConnection().createStatement();
 		ResultSet rs = statement.executeQuery(query);
@@ -87,7 +87,7 @@ public class TableData {
 			value = rs.getDouble(1);
 		}
 		
-		System.out.println(value);
+		//System.out.println(value);
 		
 		return value;
 	}
