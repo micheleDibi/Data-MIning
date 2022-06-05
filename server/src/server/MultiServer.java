@@ -26,7 +26,7 @@ public class MultiServer {
                 System.out.println("Connessione avvenuta con successo");
 
                 try {
-                    new ServerOneClient(socket);
+                    new ServeOneClient(socket);
                 } catch (IOException e) {
                     System.out.println("[MultiServer_run_IOexception] : " + e.getMessage());
                 }
