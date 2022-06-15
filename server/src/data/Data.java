@@ -1,19 +1,13 @@
 package data;
 
+import database.*;
+import example.Example;
+
 import java.io.*;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Scanner;
-
-import database.Column;
-import database.DbAccess;
-import database.InsufficientColumnNumberException;
-import database.TableData;
-import database.TableSchema;
-import database.QUERY_TYPE;
-import example.Example;
-import utility.Keyboard;
 
 public class Data implements Serializable {
 
@@ -319,32 +313,26 @@ public class Data implements Serializable {
 
         return somma / (i);
     }
-
-    public Example readExample() {
+    public Example readExample(ObjectOutputStream out, ObjectInputStream in) throws IOException, ClassNotFoundException {
         Example e = new Example(getNumberofExplanatoryAttributes());
+
         int i = 0;
         for (Attribute a : explanatorySet) {
             if (a instanceof DiscreteAttribute) {
-                System.out.print("Inserisci valore discreto X[" + i + "]:");
-                e.set(Keyboard.readString(), i);
+                out.writeObject("@READSTRING");
+                out.writeObject("Inserisci valore discreto X[" + i + "]:");
+                e.set((String)(in.readObject()), i);
             } else {
+                out.writeObject("@READNUMBER");
                 double x;
                 do {
-                    System.out.print("Inserisci valore continuo X[" + i + "]:");
-                    x = Keyboard.readDouble();
+                    out.writeObject("Inserisci valore continuo X[" + i + "]:");
+                    x = (double)(in.readObject());
                 } while (new Double(x).equals(Double.NaN));
                 e.set(x, i);
             }
             i++;
         }
-        return e;
-    }
-
-    public Example readExample(ObjectOutputStream out, ObjectInputStream in) throws IOException {
-        Example e = new Example(getNumberofExplanatoryAttributes());
-
-
-
         out.writeObject("@ENDEXAMPLE");
         return e;
     }

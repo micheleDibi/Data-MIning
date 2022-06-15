@@ -1,14 +1,13 @@
 package database;
 
+import example.Example;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import example.Example;
 
 public class TableData {
 
@@ -78,7 +77,7 @@ public class TableData {
 		Double value = new Double(0);
 		String query = "select " + aggregate + "(" + column.getColumnName() + ")" + " from " + table;
 		
-		System.out.println(query);
+		//System.out.println(query);
 		
 		Statement statement = db.getConnection().createStatement();
 		ResultSet rs = statement.executeQuery(query);
@@ -87,7 +86,7 @@ public class TableData {
 			value = rs.getDouble(1);
 		}
 		
-		System.out.println(value);
+		//System.out.println(value);
 		
 		return value;
 	}
